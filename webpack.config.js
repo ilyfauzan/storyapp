@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // Import plugin
+const CopyWebpackPlugin = require('copy-webpack-plugin'); // Tambahkan impor plugin ini
 
 module.exports = {
   entry: './src/app.js',
@@ -8,7 +9,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
-  mode: 'development',
+  mode: 'production', // Ubah menjadi 'production' untuk build final
+  devtool: 'source-map', // Menambahkan source map untuk debugging
   devServer: {
     static: './dist',
     open: true,
@@ -20,11 +22,25 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource', // Menangani gambar
+      },
+      {
+        test: /\.(eot|ttf|woff|woff2)$/i,
+        type: 'asset/inline', // Menangani font
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html', // Gunakan template HTML Anda
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/manifest.json', to: 'manifest.json' }, // Menyalin manifest.json ke dist
+        { from: 'src/service-worker.js', to: 'service-worker.js' }, // Menyalin service-worker.js ke dist
+      ],
     }),
   ],
 };

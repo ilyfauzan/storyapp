@@ -423,6 +423,11 @@ const View = {
   initMap() {
     if (this.map) this.map.remove();
 
+    const mapContainer = L.DomUtil.get('map');
+  if (mapContainer != null) {
+    mapContainer._leaflet_id = null;
+  }
+
     const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     });
