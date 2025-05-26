@@ -30,7 +30,8 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/manifest.json', to: 'manifest.json' }, // Menyalin manifest.json ke dist
-        { from: 'src/service-worker.js', to: 'service-worker.js' }, // Menyalin service-worker.js ke dist
+        { from: 'src/service-worker.js', to: 'service-worker.js' },
+        { from: 'src/icons', to: 'icons' }, // Menyalin service-worker.js ke dist
       ],
     }),
   ],
