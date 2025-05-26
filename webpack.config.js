@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // Import plugin
 
 module.exports = {
   entry: './src/app.js',
@@ -21,4 +22,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html', // Gunakan template HTML Anda
+    }),
+  ],
 };
