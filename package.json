@@ -1,0 +1,25 @@
+{
+  "name": "story-spa",
+  "version": "1.0.0",
+  "description": "Aplikasi Story SPA Dicoding Submission",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "feather-icons": "^4.29.0",
+    "idb": "^8.0.3",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
