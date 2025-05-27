@@ -33,6 +33,7 @@ class Presenter {
 
     const hash = this.view.getHash() || 'login';
 
+    // Cek jika token tidak ada dan bukan halaman login atau register
     if (!this.model.token && hash !== 'login' && hash !== 'register') {
       this.view.navigateTo('login');
       return;
@@ -59,7 +60,7 @@ class Presenter {
       case 'logout':
         this.logout();
         break;
-        case 'favorites':
+      case 'favorites':
         await View.renderFavorites();
         break;
       default:
@@ -129,6 +130,7 @@ class Presenter {
       const result = await this.model.login(formData.email, formData.password);
       if (result === true) {
         await requestNotificationPermissionAndSubscribe(this.model.token);
+        this.view.navigateTo('home'); // Pastikan ini dipanggil setelah login berhasil
       }
       return {
         success: result === true,
