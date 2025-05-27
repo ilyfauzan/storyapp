@@ -33,12 +33,6 @@ class Presenter {
 
     const hash = this.view.getHash() || 'login';
 
-    // Cek jika token tidak ada dan bukan halaman login atau register
-    if (!this.model.token && hash !== 'login' && hash !== 'register') {
-      this.view.navigateTo('login');
-      return;
-    }
-
     this.view.updateNavVisibility(!!this.model.token, hash);
     this.view.startViewTransition(() => this.routeToPage(hash));
   }
@@ -51,6 +45,9 @@ class Presenter {
       case 'add':
         this.showAddStory();
         break;
+       case 'favorites':
+        await View.renderFavorites();
+        break;
       case 'login':
         this.showLogin();
         break;
@@ -59,9 +56,6 @@ class Presenter {
         break;
       case 'logout':
         this.logout();
-        break;
-      case 'favorites':
-        await View.renderFavorites();
         break;
       default:
         this.view.renderError('Halaman tidak ditemukan');
@@ -125,24 +119,18 @@ class Presenter {
     this.view.focusMainContent();
   }
 
-showLogin() {
-  this.view.renderLogin(async (formData) => {
-    console.log('🔐 Login form submitted:', formData);
-    
-    const result = await this.model.login(formData.email, formData.password);
-    console.log('🎯 Login result:', result);
-    
-    if (result === true) {
-      console.log('✅ Login successful, navigating to home...');
-      await requestNotificationPermissionAndSubscribe(this.model.token);
-      this.view.navigateTo('home'); // ← Pastikan ini dipanggil
-    }
-    
-    return {
-      success: result === true,
-      message: result === true ? '' : 'Login gagal. Periksa email dan password.'
-    };
-  });
+  showLogin() {
+    this.view.renderLogin(async (formData) => {
+      const result = await this.model.login(formData.email, formData.password);
+      if (result === true) {
+        await requestNotificationPermissionAndSubscribe(this.model.token);
+        this.view.navigateTo('home'); // Pastikan ini dipanggil setelah login berhasil
+      }
+      return {
+        success: result === true,
+        message: result === true ? '' : 'Login gagal. Periksa email dan password.'
+      };
+    });
     this.view.focusMainContent();
   }
 

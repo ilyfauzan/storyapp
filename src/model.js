@@ -13,33 +13,20 @@ const Model = {
     return data;
   },
 
- async login(email, password) {
-  try {
+  async login(email, password) {
     const res = await fetch(`${API_BASE}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }), // ← Hapus 'name'
+      body: JSON.stringify({ email, password }),
     });
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    
     const data = await res.json();
-    console.log('Login response:', data);
-    
-    if (!data.error && data.loginResult && data.loginResult.token) {
+    if (!data.error) {
       this.token = data.loginResult.token;
       localStorage.setItem('token', this.token);
       return true;
     }
-    
     return false;
-  } catch (error) {
-    console.error('Login error:', error);
-    return false;
-  }
-},
+  },
 
   logout() {
     this.token = null;
