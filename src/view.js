@@ -421,65 +421,71 @@ const View = {
   },
 
   initMap() {
-    if (this.map) this.map.remove();
-
-    const mapContainer = L.DomUtil.get('map');
-  if (mapContainer != null) {
-    mapContainer._leaflet_id = null;
+  // Check if a map instance already exists and remove it
+  if (this.map) {
+    this.map.remove(); // This will fully remove the map instance
   }
 
-    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-    });
+  // Get the map container
+  const mapContainer = L.DomUtil.get('map');
+  if (mapContainer != null) {
+    mapContainer._leaflet_id = null; // Clear the reference to the old map
+  }
 
-    const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenTopoMap contributors',
-    });
+  // Initialize the new map
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+  });
 
-    const watercolor = L.tileLayer(
-      'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-      {
-        attribution: 'Map tiles by Stamen Design, under CC BY 3.0.',
-      }
-    );
+  const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenTopoMap contributors',
+  });
 
-    this.map = L.map('map', {
-      center: [-6.200000, 106.816666],
-      zoom: 13,
-      layers: [osm],
-    });
-
-    this.markersLayer = L.layerGroup().addTo(this.map);
-
-    const baseLayers = {
-      'OpenStreetMap': osm,
-      'OpenTopoMap': topo,
-      'Watercolor': watercolor,
-    };
-
-    L.control.layers(baseLayers).addTo(this.map);
-
-    if (this.isOffline) {
-      const mapContainer = document.getElementById('map');
-      const offlineMapMsg = document.createElement('div');
-      offlineMapMsg.style.cssText = `
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: rgba(239, 68, 68, 0.9);
-        color: white;
-        padding: 8px 12px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 600;
-        z-index: 1000;
-        pointer-events: none;
-      `;
-      offlineMapMsg.textContent = '📵 Map offline - Data terbatas';
-      mapContainer.style.position = 'relative';
-      mapContainer.appendChild(offlineMapMsg);
+  const watercolor = L.tileLayer(
+    'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
+    {
+      attribution: 'Map tiles by Stamen Design, under CC BY 3.0.',
     }
-  },
+  );
+
+  this.map = L.map('map', {
+    center: [-6.200000, 106.816666],
+    zoom: 13,
+    layers: [osm],
+    dragging: true // Ensure dragging is enabled
+  });
+
+  this.markersLayer = L.layerGroup().addTo(this.map);
+
+  const baseLayers = {
+    'OpenStreetMap': osm,
+    'OpenTopoMap': topo,
+    'Watercolor': watercolor,
+  };
+
+  L.control.layers(baseLayers).addTo(this.map);
+
+  if (this.isOffline) {
+    const mapContainer = document.getElementById('map');
+    const offlineMapMsg = document.createElement('div');
+    offlineMapMsg.style.cssText = `
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 1000;
+      pointer-events: none;
+    `;
+    offlineMapMsg.textContent = '📵 Map offline - Data terbatas';
+    mapContainer.style.position = 'relative';
+    mapContainer.appendChild(offlineMapMsg);
+  }
+},
 
   showMarkers(stories) {
     if (!this.map) this.initMap();
