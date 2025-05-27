@@ -125,18 +125,24 @@ class Presenter {
     this.view.focusMainContent();
   }
 
-  showLogin() {
-    this.view.renderLogin(async (formData) => {
-      const result = await this.model.login(formData.email, formData.password);
-      if (result === true) {
-        await requestNotificationPermissionAndSubscribe(this.model.token);
-        this.view.navigateTo('home'); // Pastikan ini dipanggil setelah login berhasil
-      }
-      return {
-        success: result === true,
-        message: result === true ? '' : 'Login gagal. Periksa email dan password.'
-      };
-    });
+showLogin() {
+  this.view.renderLogin(async (formData) => {
+    console.log('🔐 Login form submitted:', formData);
+    
+    const result = await this.model.login(formData.email, formData.password);
+    console.log('🎯 Login result:', result);
+    
+    if (result === true) {
+      console.log('✅ Login successful, navigating to home...');
+      await requestNotificationPermissionAndSubscribe(this.model.token);
+      this.view.navigateTo('home'); // ← Pastikan ini dipanggil
+    }
+    
+    return {
+      success: result === true,
+      message: result === true ? '' : 'Login gagal. Periksa email dan password.'
+    };
+  });
     this.view.focusMainContent();
   }
 
